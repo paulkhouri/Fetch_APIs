@@ -1,0 +1,121 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+  <title>Fetch APIs</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+    <style>
+        body{
+            margin: 0;
+        }
+        img{
+            width:300px;
+        }
+   
+        .canvas-container{
+            box-sizing: border-box;
+            position: relative;
+          
+          /*  width:50vw;
+            height:50vh;
+            */
+            /*
+            width:1000px;
+            height:800px;
+            */
+            width:80%;
+            height: 500px;
+            border: 20px solid gray;
+            margin:auto;
+        }
+      
+   
+    </style>
+
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+</head>
+
+<body>
+    <div class="canvas-container">
+    <canvas id="chart"  height="100"></canvas>
+</div>
+    <img src="" id="my_element" />
+    <img src="" id="one" />
+    <img src="" id="two" />
+    <img src="" id="three" />
+    <p id="pgraph"> </p>
+    <script>
+get_chart();
+async function get_chart(){
+    const data = await get_data()
+    console.log(data);
+var ctx = document.getElementById('chart').getContext('2d');
+var myChart = new Chart(ctx, {
+   // maintainAspectRatio: false,
+    
+    type: 'line',
+    data: {
+        labels: data.xs,
+        datasets: [{
+            label: 'Global Average Temperature',
+            data: data.ys,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)' ,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+            fill: false
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false,
+                    callback: function(value, index, values) {
+                        return value + '°';
+                    }
+                }
+            }]
+        }
+    }
+});
+
+}
+
+
+
+
+        //https://data.giss.nasa.gov/gistemp/
+console.log("Running");
+
+async function get_data(){
+        const xs = [];
+        const ys = [];
+
+        const response = await fetch("ZonAnn_Ts_dSST.csv");
+        const data = await response.text();
+        //console.log(data)
+        table = data.split('\n').slice(1);
+        //console.log(rows);
+        table.forEach(row => {
+        column = row.split(',');
+        //console.log(row);
+        const year = column[0]
+        const temp = column[1]
+        xs.push(year);
+        ys.push(parseFloat(temp) + 14)
+        console.log(year, temp);
+       
+    });
+    return {xs, ys};
+      }
+    
+    </script>
+</body>
+</html>

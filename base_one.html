@@ -1,0 +1,98 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+  <title>Fetch APIs</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+    <style>
+        img{
+            width:300px;
+        }
+    </style>
+
+ 
+
+</head>
+
+<body>
+    <img src="" id="my_element" />
+    <img src="" id="one" />
+    <img src="" id="two" />
+    <img src="" id="three" />
+    <p id="pgraph"> </p>
+    <script>
+        //https://data.giss.nasa.gov/gistemp/
+        //document.getElementById("pgraph").innerHTML = "hello";
+        async function catchImage(n,id){
+            const response =await fetch(n);
+            
+            const blob = await response.blob();
+            if(blob.type == "text/plain"){
+                console.log("text")
+                var reader = blob.text();
+                var txt = await reader
+                document.getElementById(id).innerHTML=txt;
+            } else if(blob.type == "image/jpeg"){
+               console.log("image");
+                document.getElementById(id).src=URL.createObjectURL(blob); 
+            }else if(blob.type == "image/png"){
+               console.log("image");
+                document.getElementById(id).src=URL.createObjectURL(blob); 
+            }
+            
+        }
+        catchImage("base.jpg","my_element").then(response => {
+            console.log("all good") 
+        }).catch(error=> {
+            console.log("my error");
+            console.error(error);
+        });
+        
+        catchImage("text.txt","pgraph").then(response => {
+            console.log("all good") 
+        }).catch(error=> {
+            console.log("my error");
+            console.error(error);
+        });
+
+        var id_array = ["one", "two", "three"] 
+        var img_array = ["sandstone.jpg", "sphere_sections.png", "sublime_point.jpg"]
+        for(var i =0 ; i < id_array.length ; i++){
+
+            catchImage(img_array[i],id_array[i]).then(response => {
+            console.log("all good") 
+        }).catch(error=> {
+            console.log("my error");
+            console.error(error);
+        });
+
+
+        }
+
+
+        
+        /*
+        console.log("fetching")
+        fetch("base.jpg").then(response =>{
+            console.log(response);
+            return response.blob();
+            
+        }).then(pic =>{
+            console.log(pic);
+            document.getElementById("my_element").src=URL.createObjectURL(pic);
+            
+        }).catch(error=> {
+            console.log("my error");
+            console.error(error);
+        });
+    */
+    
+    
+    </script>
+ 
+</body>
+</html>
